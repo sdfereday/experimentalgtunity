@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d62404bea58574481265d975dcbbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dampTime: 5
+  dampTime: 25
   JustPosition: 0
   target: {fileID: 824624573}
   SearchForTag: Player
@@ -415,6 +415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 952e67a762905034398c60b3ac10235e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SkidFab: {fileID: 5972606907172218026, guid: f44765496d8579d4ab238ff951d068a3, type: 3}
 --- !u!50 &824624571
 Rigidbody2D:
   serializedVersion: 4
