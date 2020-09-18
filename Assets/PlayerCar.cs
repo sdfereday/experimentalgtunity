@@ -10,7 +10,7 @@ public class PlayerCar : MonoBehaviour
     float carHeading = 0f;
     float carSpeed = 0f;
     float acceleration = 10f;
-    float maxSpeed = 20f;
+    float maxSpeed = 10f;
     float steerAngle = 0f;
     float maxSteerAngle = 40f;
     float wheelBase = 4;
@@ -37,8 +37,8 @@ public class PlayerCar : MonoBehaviour
             GameObject skid = Instantiate(SkidFab);
 
             //Set some properties
-            skid.transform.position = transform.position;
-            skid.transform.rotation = transform.rotation;
+            skid.transform.position = rb.position;
+            skid.transform.rotation = Quaternion.Euler(0f, 0f, rb.rotation);
 
             //keep reference of all skidmarks
             Skidmarks.Add(skid);
@@ -69,30 +69,12 @@ public class PlayerCar : MonoBehaviour
 
         // Step 3 - Application
         // -> Find the center of the car by inversing the wheels position vectors (I think this is actually the velocity tbh)
-        carLocation = (frontWheel + rearWheel) / 2;
+        carLocation = (frontWheel + rearWheel) / 2;// * Input.GetAxis("Vertical");
         // -> Update the car heading angle by measuring the new angle between the front and back wheel's vectors
         carHeading = Mathf.Atan2(frontWheel.y - rearWheel.y, frontWheel.x - rearWheel.x);
-        
-        /// Broken beyond here
-        // Step 4 - Return it to the rigidBody component
-        // -> Apply new car location and rotation (kinematic mode, and beware, if you're RB is kinematic, you won't get the same benefits)
-        //rb.AddTorque(carLocation.magnitude * 2f * carHeading);
-        rb.velocity = Vector2.ClampMagnitude(rb.velocity, maxSpeed);
 
-        // AddForce will continuously add the carLocation vector. It doesn't care where it currently is. You need to make it realise
-        // that if the location isn't changing, then it should add more. When we set velocity directly it's a bit different since
-        // the value is directly set as opposed to incremented.
-        /* Somehow the new car position vector */
-
-        // These won't work because you're 'adding' a vector every time as opposed to a varying acceleration vector.
-        rb.AddForce(carLocation);
-        //rb.velocity = Input.GetAxisRaw("Vertical") != 0 ? carLocation : rb.velocity * 0.1f;
-        
-        // Seems to work okay
-        rb.SetRotation(carHeading * Mathf.Rad2Deg);
-
-        // Only works if kinematic
-        //rb.position = carLocation;
-        //rb.rotation = carHeading * Mathf.Rad2Deg;
+        // Step 4 - Return it to the rigidBody component - Only works if kinematic
+        rb.position = carLocation;
+        rb.rotation = carHeading * Mathf.Rad2Deg;
     }
 }
